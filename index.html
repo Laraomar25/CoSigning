@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Language Translator | Bidirectional Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- Loading / Welcome Screen -->
+  <section id="loadingScreen" class="loading-screen">
+    <div class="loading-orb"></div>
+    <h1>Sign Language Translator</h1>
+    <p>Bidirectional ASL translation platform</p>
+    <div class="loading-bar">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- Main App -->
+  <main id="app" class="app hidden">
+    <header class="topbar">
+      <div>
+        <h1>Sign Language Translator</h1>
+        <p id="modeSubtitle">Speech → Sign demo</p>
+      </div>
+
+      <nav class="tabs">
+        <button id="speechToSignTab" class="tab active" type="button">
+          Speech to Sign
+        </button>
+        <button id="signToSpeechTab" class="tab" type="button">
+          Sign to Speech
+        </button>
+      </nav>
+    </header>
+
+    <!-- Speech to Sign View -->
+    <section id="speechToSignView" class="hero view active">
+      <!-- Left Panel -->
+      <aside class="panel input-panel">
+        <div class="panel-label">Input</div>
+        <h2>Speak a sentence</h2>
+        <p class="hint">
+          Try: “I want to learn sign language”
+        </p>
+
+        <button id="micButton" class="mic-button" type="button">
+          <span class="mic-icon">🎙️</span>
+          <span id="micButtonText">Start Listening</span>
+        </button>
+
+        <div class="backup-input">
+          <label for="typedInput">Backup typed input</label>
+          <textarea
+            id="typedInput"
+            placeholder="Type a sentence here if microphone fails..."
+          ></textarea>
+
+          <button id="translateTypedButton" class="secondary-button" type="button">
+            Translate Typed Text
+          </button>
+        </div>
+      </aside>
+
+      <!-- Center Avatar Stage -->
+      <section class="avatar-stage">
+        <div class="stage-glow"></div>
+
+        <div class="avatar-frame">
+          <video
+            id="avatarVideo"
+            class="avatar-video"
+            muted
+            playsinline
+            preload="auto"
+          ></video>
+
+          <div id="idlePlaceholder" class="idle-placeholder">
+            <img
+              src="assets/avatar-idle.png"
+              alt="Avatar ready"
+              class="idle-avatar-image"
+            />
+            <p>Avatar ready</p>
+          </div>
+        </div>
+
+        <div id="currentSign" class="current-sign">
+          Waiting for speech
+        </div>
+      </section>
+
+      <!-- Right Panel -->
+      <aside class="panel output-panel">
+        <div class="panel-label">Output</div>
+
+        <h2>Recognized Speech</h2>
+        <div id="transcriptBox" class="text-box">
+          No speech captured yet.
+        </div>
+
+        <h2>Sign Sequence</h2>
+        <div id="signSequence" class="sign-sequence">
+          <span class="empty">No signs yet.</span>
+        </div>
+
+        <div class="action-row">
+          <button id="replayButton" class="secondary-button" type="button" disabled>
+            Replay
+          </button>
+          <button id="clearButton" class="secondary-button" type="button">
+            Clear
+          </button>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Sign to Speech View -->
+    <section id="signToSpeechView" class="hero view">
+      <!-- Left Panel -->
+      <aside class="panel input-panel">
+        <div class="panel-label">Input</div>
+        <h2>Sign with camera</h2>
+        <p class="hint">
+          Use webcam or upload a sign video. Live tracking and model prediction will be connected next.
+        </p>
+
+        <button id="openCameraButton" class="mic-button" type="button">
+          <span class="mic-icon">📷</span>
+          <span>Open Camera</span>
+        </button>
+
+        <div class="action-row compact-row">
+          <button id="startSigningButton" class="secondary-button" type="button" disabled>
+            Start
+          </button>
+          <button id="stopSigningButton" class="secondary-button" type="button" disabled>
+            Stop
+          </button>
+        </div>
+
+        <div class="backup-input">
+          <label for="signVideoInput">Backup video input</label>
+          <input
+            id="signVideoInput"
+            class="file-input"
+            type="file"
+            accept="video/*"
+          />
+
+          <button id="predictVideoButton" class="secondary-button" type="button">
+            Predict Uploaded Video
+          </button>
+        </div>
+      </aside>
+
+      <!-- Center Camera Stage -->
+      <section class="avatar-stage camera-stage">
+        <div class="stage-glow"></div>
+
+        <div class="avatar-frame camera-frame">
+          <video
+            id="cameraPreview"
+            class="camera-preview"
+            autoplay
+            muted
+            playsinline
+          ></video>
+
+          <canvas id="trackingCanvas" class="tracking-canvas"></canvas>
+
+          <div id="cameraPlaceholder" class="idle-placeholder camera-placeholder">
+            <div>
+              <div class="avatar-silhouette">🖐️</div>
+              <p>Camera preview will appear here</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="signStatusLabel" class="current-sign">
+          Waiting for sign
+        </div>
+      </section>
+
+      <!-- Right Panel -->
+      <aside class="panel output-panel">
+        <div class="panel-label">Output</div>
+
+        <h2>Predicted Speech</h2>
+        <div id="predictedSpeechBox" class="text-box">
+          No sign predicted yet.
+        </div>
+
+        <h2>Detected Signs</h2>
+        <div id="detectedSignsBox" class="sign-sequence">
+          <span class="empty">No signs yet.</span>
+        </div>
+
+        <h2>Top Predictions</h2>
+        <div id="topPredictionsBox" class="top-predictions">
+          <span class="empty">No prediction yet.</span>
+        </div>
+
+        <div class="action-row">
+          <button id="speakPredictionButton" class="secondary-button" type="button" disabled>
+            Speak
+          </button>
+          <button id="clearSignButton" class="secondary-button" type="button">
+            Clear
+          </button>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="statusbar">
+      <span id="statusDot" class="status-dot"></span>
+      <span id="statusText">System ready</span>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
