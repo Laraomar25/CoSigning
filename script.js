@@ -343,7 +343,7 @@ function renderSupportedWords() {
 
   const note = document.createElement("span");
   note.className = "empty suggestion-note";
-  note.textContent = "Supported words (click one to try it):";
+  note.textContent = "Supported words:";
   signSequence.appendChild(note);
 
   SUPPORTED_WORDS.forEach((word) => {
