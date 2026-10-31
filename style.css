@@ -211,6 +211,32 @@ body {
   line-height: 1.5;
 }
 
+.example-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 18px;
+}
+
+.example-chip {
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: var(--text-muted);
+  background: rgba(124, 92, 255, 0.12);
+  border: 1px solid rgba(124, 92, 255, 0.32);
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.example-chip:hover,
+.example-chip:focus-visible {
+  color: white;
+  background: rgba(124, 92, 255, 0.35);
+  outline: none;
+}
+
 /* Buttons and Inputs */
 
 .mic-button {

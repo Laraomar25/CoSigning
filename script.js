@@ -939,6 +939,13 @@ translateTypedButton.addEventListener("click", () => {
   processSentence(sentence);
 });
 
+document.querySelectorAll(".example-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    typedInput.value = chip.textContent;
+    processSentence(chip.textContent);
+  });
+});
+
 replayButton.addEventListener("click", () => {
   if (lastPlayableWords.length && !isPlaying) {
     playSignQueue(lastPlayableWords);
