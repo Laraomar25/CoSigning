@@ -518,6 +518,21 @@ textarea:focus {
   box-shadow: 0 0 28px rgba(25, 211, 255, 0.32);
 }
 
+.suggestion-note {
+  width: 100%;
+}
+
+.suggestion-chip {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.suggestion-chip:hover,
+.suggestion-chip:focus-visible {
+  background: rgba(124, 92, 255, 0.45);
+  outline: none;
+}
+
 .empty {
   color: var(--text-muted);
 }

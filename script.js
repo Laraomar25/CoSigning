@@ -120,6 +120,138 @@ const WORD_NORMALIZATION = {
   "nope": "no"
 };
 
+// ===============================
+// Arabic Words (MSA + Levantine)
+// ===============================
+
+// Each sign maps to the Arabic forms that should play it.
+const ARABIC_SOURCE = {
+  and: ["و"],
+  bad: ["سيء", "سيئ", "سيئة", "وحش", "وحشة"],
+  because: ["لأن", "لأنه", "لأني", "عشان", "علشان"],
+  brother: ["أخ", "أخي", "أخوي", "أخويا"],
+  come: ["تعال", "تعالي", "يجي", "أجي", "بجي", "جاء", "أتى", "تيجي"],
+  day: ["يوم", "نهار"],
+  drink: ["اشرب", "أشرب", "بشرب", "يشرب", "شرب", "شراب"],
+  eat: ["آكل", "أكل", "باكل", "بآكل", "يأكل", "ياكل", "تاكل"],
+  family: ["عائلة", "عيلة", "أسرة", "عائلتي", "عيلتي"],
+  father: ["أب", "أبي", "بابا", "أبوي", "والد", "والدي"],
+  friend: ["صديق", "صديقي", "صديقة", "صاحب", "صاحبي", "صاحبتي", "أصحاب", "أصدقاء", "رفيق", "رفيقي"],
+  get: ["أحصل", "يحصل", "جيب", "أجيب", "بجيب"],
+  go: ["اذهب", "أذهب", "يذهب", "روح", "أروح", "بروح", "رايح", "رايحة"],
+  good: ["جيد", "جيدة", "منيح", "منيحة", "كويس", "كويسة", "تمام", "حلو", "ممتاز"],
+  happy: ["سعيد", "سعيدة", "مبسوط", "مبسوطة", "فرحان", "فرحانة"],
+  have: ["عندي", "عنده", "عندها", "عندك", "عنا", "لدي"],
+  help: ["ساعد", "ساعدني", "أساعد", "بساعد", "يساعد", "مساعدة"],
+  home: ["بيت", "بيتي", "منزل", "منزلي", "دار"],
+  how: ["كيف", "شلون", "ازاي"],
+  i: ["أنا"],
+  know: ["أعرف", "بعرف", "يعرف", "عارف", "عارفة"],
+  language: ["لغة", "لغات"],
+  learn: ["أتعلم", "بتعلم", "تعلم", "يتعلم"],
+  like: ["أحب", "بحب", "يحب", "تحب"],
+  make: ["أصنع", "يصنع", "سوي", "بسوي"],
+  mother: ["أم", "أمي", "ماما", "والدة", "والدتي"],
+  name: ["اسم", "اسمي", "اسمك"],
+  need: ["أحتاج", "بحتاج", "يحتاج", "محتاج", "محتاجة"],
+  no: ["لا", "لأ"],
+  not: ["مش", "ليس", "ما", "مو", "لم", "لن"],
+  now: ["الآن", "هلأ", "هلق", "هسا", "هسه", "دلوقتي"],
+  or: ["أو"],
+  people: ["ناس", "شعب"],
+  person: ["شخص", "إنسان"],
+  sad: ["حزين", "حزينة", "زعلان", "زعلانة"],
+  say: ["قال", "يقول", "أقول", "بقول", "قول"],
+  school: ["مدرسة", "مدرستي"],
+  see: ["أرى", "يرى", "شاف", "أشوف", "بشوف", "يشوف", "شوف"],
+  she: ["هي"],
+  sign: ["إشارة", "إشارات"],
+  sister: ["أخت", "أختي"],
+  sleep: ["نوم", "أنام", "بنام", "نام", "ينام"],
+  study: ["أدرس", "بدرس", "يدرس", "درس", "دراسة"],
+  teach: ["أعلم", "بعلم", "يعلم", "تعليم", "معلم", "معلمة", "أستاذ", "أستاذة"],
+  tell: ["احكي", "بحكي", "يحكي", "أخبر", "خبر"],
+  they: ["هم", "هن", "هما"],
+  think: ["أفكر", "بفكر", "يفكر", "فكر", "أعتقد"],
+  time: ["وقت", "زمن"],
+  today: ["اليوم"],
+  tomorrow: ["بكرة", "بكرا", "غدا", "غدًا"],
+  want: ["أريد", "يريد", "تريد", "بدي", "بدك", "بده", "بدها", "عايز", "أبغى"],
+  we: ["نحن", "احنا", "إحنا"],
+  week: ["أسبوع"],
+  what: ["ماذا", "شو", "إيش", "شنو"],
+  when: ["متى", "إمتى", "امتى"],
+  where: ["أين", "وين", "فين"],
+  why: ["لماذا", "ليش", "ليه"],
+  with: ["مع"],
+  work: ["عمل", "شغل", "شغلي", "أشتغل", "بشتغل", "يشتغل"],
+  yes: ["نعم", "أيوه", "أيوا", "آه", "إيه"],
+  yesterday: ["أمس", "امبارح", "مبارح", "البارحة"],
+  you: ["أنت", "انتي", "إنتي", "أنتم", "انتو"]
+};
+
+const ARABIC_FILLER_SOURCE = [
+  "في", "على", "من", "إلى", "عن", "هذا", "هذه", "هاد", "هاي", "يا",
+  "أن", "إن", "كان", "كانت", "جدا", "كتير", "كثير", "لو", "سمحت"
+];
+
+// Unify spelling so "أنا", "انا" and "أنَا" all match.
+function normalizeArabic(text) {
+  return text
+    .replace(/[ً-ٰٟـ]/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه");
+}
+
+const ARABIC_MAP = new Map();
+for (const [sign, forms] of Object.entries(ARABIC_SOURCE)) {
+  for (const form of forms) {
+    ARABIC_MAP.set(normalizeArabic(form), sign);
+  }
+}
+
+const ARABIC_FILLERS = new Set(ARABIC_FILLER_SOURCE.map(normalizeArabic));
+
+const ARABIC_PATTERN = /[؀-ۿ]/;
+
+// Turns one Arabic word into zero, one or two signs
+// (e.g. "وأمي" -> ["and", "mother"]).
+function arabicWordToSigns(rawWord) {
+  const word = normalizeArabic(rawWord);
+
+  if (ARABIC_FILLERS.has(word)) return [];
+  if (ARABIC_MAP.has(word)) return [ARABIC_MAP.get(word)];
+
+  const prefixes = ["وال", "بال", "عال", "لل", "ال", "و", "ب"];
+  const suffixes = ["ين", "ون", "ات", "ي", "ك", "ه", "ها", "نا"];
+
+  const tryForms = (stem) => {
+    if (ARABIC_MAP.has(stem)) return ARABIC_MAP.get(stem);
+    for (const suffix of suffixes) {
+      if (stem.length > suffix.length + 1 && stem.endsWith(suffix)) {
+        const base = stem.slice(0, -suffix.length);
+        if (ARABIC_MAP.has(base)) return ARABIC_MAP.get(base);
+      }
+    }
+    return null;
+  };
+
+  const direct = tryForms(word);
+  if (direct) return [direct];
+
+  for (const prefix of prefixes) {
+    if (word.length > prefix.length + 1 && word.startsWith(prefix)) {
+      const sign = tryForms(word.slice(prefix.length));
+      if (sign) {
+        return prefix.startsWith("و") ? ["and", sign] : [sign];
+      }
+    }
+  }
+
+  return [];
+}
+
 const FILLER_WORDS = new Set([
   "a", "an", "the", "to", "am", "is", "are", "was", "were", "be",
   "been", "being", "do", "does", "did", "very", "really", "please",
@@ -252,7 +384,8 @@ function speakText(text) {
 function cleanText(text) {
   return text
     .toLowerCase()
-    .replace(/[^\w\s']/g, " ")
+    .replace(/[ً-ٰٟـ]/g, "")
+    .replace(/[^\p{L}\p{N}\s']/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -298,6 +431,11 @@ function sentenceToPlayableWords(sentence) {
   const playable = [];
 
   for (const rawWord of rawWords) {
+    if (ARABIC_PATTERN.test(rawWord)) {
+      playable.push(...arabicWordToSigns(rawWord));
+      continue;
+    }
+
     if (FILLER_WORDS.has(rawWord)) {
       continue;
     }
@@ -334,6 +472,25 @@ function renderSignSequence(words, activeIndex = -1) {
 
     chip.textContent = word;
     signSequence.appendChild(chip);
+  });
+}
+
+// Shows every supported word as a button the user can click to play it.
+function renderSupportedWords() {
+  signSequence.innerHTML = "";
+
+  const note = document.createElement("span");
+  note.className = "empty suggestion-note";
+  note.textContent = "Supported words (click one to try it):";
+  signSequence.appendChild(note);
+
+  SUPPORTED_WORDS.forEach((word) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "sign-chip suggestion-chip";
+    button.textContent = word;
+    button.addEventListener("click", () => processSentence(word));
+    signSequence.appendChild(button);
   });
 }
 
@@ -407,7 +564,8 @@ function processSentence(sentence) {
 
   if (!playableWords.length) {
     currentSign.textContent = "No supported signs found";
-    setStatus("No supported signs found in this sentence.", "error");
+    setStatus("No supported signs found. Pick a word from the list.", "error");
+    renderSupportedWords();
     return;
   }
 
